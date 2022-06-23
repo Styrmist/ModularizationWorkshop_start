@@ -1,11 +1,11 @@
 import Combine
 import UIKit
 
-public class InventoryViewController: UIViewController, UICollectionViewDelegate {
+class InventoryViewController: UIViewController, UICollectionViewDelegate {
   let viewModel: InventoryViewModel
   private var cancellables: Set<AnyCancellable> = []
 
-  public init(viewModel: InventoryViewModel) {
+  init(viewModel: InventoryViewModel) {
     self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
   }
@@ -14,7 +14,7 @@ public class InventoryViewController: UIViewController, UICollectionViewDelegate
     fatalError("init(coder:) has not been implemented")
   }
 
-  override public func viewDidLoad() {
+  override func viewDidLoad() {
     super.viewDidLoad()
 
     // MARK: view creation
@@ -145,7 +145,7 @@ public class InventoryViewController: UIViewController, UICollectionViewDelegate
     // MARK: UI actions
   }
   
-  public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     self.viewModel.inventory[indexPath.row].setEditNavigation(isActive: true)
   }
 }

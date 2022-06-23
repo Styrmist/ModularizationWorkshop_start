@@ -1,7 +1,7 @@
 import Foundation
 import Parsing
 
-public struct DeepLinkRequest {
+struct DeepLinkRequest {
 
     var pathComponents: ArraySlice<Substring>
     var queryItems: [String: ArraySlice<Substring?>]
@@ -10,7 +10,7 @@ public struct DeepLinkRequest {
 
 extension DeepLinkRequest {
 
-    public init(url: URL) {
+    init(url: URL) {
         let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems ?? []
 
         self.init(
@@ -23,15 +23,15 @@ extension DeepLinkRequest {
 
 }
 
-public struct PathComponent<ComponentParser>: Parser where ComponentParser: Parser, ComponentParser.Input == Substring {
+struct PathComponent<ComponentParser>: Parser where ComponentParser: Parser, ComponentParser.Input == Substring {
 
     let component: ComponentParser
 
-    public init(_ component: ComponentParser) {
+    init(_ component: ComponentParser) {
         self.component = component
     }
 
-    public func parse(_ input: inout DeepLinkRequest) -> ComponentParser.Output? {
+    func parse(_ input: inout DeepLinkRequest) -> ComponentParser.Output? {
         guard var firstComponent = input.pathComponents.first,
               let output = try? self.component.parse(&firstComponent),
               firstComponent.isEmpty else { return nil }
@@ -43,11 +43,11 @@ public struct PathComponent<ComponentParser>: Parser where ComponentParser: Pars
 
 }
 
-public struct PathEnd: Parser {
+struct PathEnd: Parser {
 
-    public init() {}
+    init() {}
 
-    public func parse(_ input: inout DeepLinkRequest) -> Void? {
+    func parse(_ input: inout DeepLinkRequest) -> Void? {
         guard input.pathComponents.isEmpty else { return nil }
 
         return ()
@@ -55,21 +55,21 @@ public struct PathEnd: Parser {
 
 }
 
-public struct QueryItem<ValueParser>: Parser where ValueParser: Parser, ValueParser.Input == Substring {
+struct QueryItem<ValueParser>: Parser where ValueParser: Parser, ValueParser.Input == Substring {
 
     let name: String
     let valueParser: ValueParser
 
-    public init(_ name: String, _ valueParser: ValueParser) {
+    init(_ name: String, _ valueParser: ValueParser) {
         self.name = name
         self.valueParser = valueParser
     }
 
-    public init(_ name: String) where ValueParser == Rest<Substring> {
+    init(_ name: String) where ValueParser == Rest<Substring> {
         self.init(name, Rest())
     }
 
-    public func parse(_ input: inout DeepLinkRequest) -> ValueParser.Output? {
+    func parse(_ input: inout DeepLinkRequest) -> ValueParser.Output? {
         guard let wrapped = input.queryItems[self.name]?.first,
               var value = wrapped,
               let output = try? self.valueParser.parse(&value),

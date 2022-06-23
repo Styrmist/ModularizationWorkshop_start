@@ -69,15 +69,15 @@ let deepLinker = PathComponent("one")
       .map { .three }
   )
 
-public enum Tab {
+enum Tab {
   case one, inventory, three
 }
 
-public class AppViewModel: ObservableObject {
+class AppViewModel: ObservableObject {
   @Published var inventoryViewModel: InventoryViewModel
   @Published var selectedTab: Tab
 
-  public init(
+  init(
     inventoryViewModel: InventoryViewModel = .init(),
     selectedTab: Tab = .one
   ) {
@@ -85,7 +85,7 @@ public class AppViewModel: ObservableObject {
     self.selectedTab = selectedTab
   }
   
-  public func open(url: URL) {
+  func open(url: URL) {
     var request = DeepLinkRequest(url: url)
     if let route = deepLinker.parse(&request) {
       switch route {
@@ -136,14 +136,14 @@ extension ItemRowViewModel {
   }
 }
 
-public struct ContentView: View {
+struct ContentView: View {
   @ObservedObject var viewModel: AppViewModel
   
-  public init(viewModel: AppViewModel) {
+  init(viewModel: AppViewModel) {
     self.viewModel = viewModel
   }
 
-  public var body: some View {
+  var body: some View {
     TabView(selection: self.$viewModel.selectedTab) {
       Button("Go to 2nd tab") {
         self.viewModel.selectedTab = .inventory

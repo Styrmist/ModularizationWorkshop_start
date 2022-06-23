@@ -1,26 +1,26 @@
 import CasePaths
 import SwiftUI
 
-public class ItemRowViewModel: Hashable, Identifiable, ObservableObject {
+class ItemRowViewModel: Hashable, Identifiable, ObservableObject {
 
-    @Published public var item: Item
-    @Published public var route: Route?
+    @Published var item: Item
+    @Published var route: Route?
     @Published var isSaving = false
 
-    public func hash(into hasher: inout Hasher) {
+    func hash(into hasher: inout Hasher) {
         hasher.combine(self.item.id)
     }
 
-    public static func == (lhs: ItemRowViewModel, rhs: ItemRowViewModel) -> Bool {
+    static func == (lhs: ItemRowViewModel, rhs: ItemRowViewModel) -> Bool {
         lhs.item.id == rhs.item.id
     }
 
-    public enum Route: Equatable {
+    enum Route: Equatable {
         case deleteAlert
         case duplicate(ItemViewModel)
         case edit(ItemViewModel)
 
-        public static func == (lhs: Self, rhs: Self) -> Bool {
+        static func == (lhs: Self, rhs: Self) -> Bool {
             switch (lhs, rhs) {
             case (.deleteAlert, .deleteAlert):
                 return true
@@ -37,16 +37,16 @@ public class ItemRowViewModel: Hashable, Identifiable, ObservableObject {
         }
     }
 
-    public var onDelete: () -> Void = {}
-    public var onDuplicate: (Item) -> Void = { _ in }
+    var onDelete: () -> Void = {}
+    var onDuplicate: (Item) -> Void = { _ in }
 
-    public var id: Item.ID { self.item.id }
+    var id: Item.ID { self.item.id }
 
-    public init(item: Item) {
+    init(item: Item) {
         self.item = item
     }
 
-    public func deleteButtonTapped() {
+    func deleteButtonTapped() {
         self.route = .deleteAlert
     }
 
@@ -55,7 +55,7 @@ public class ItemRowViewModel: Hashable, Identifiable, ObservableObject {
         self.route = nil
     }
 
-    public func setEditNavigation(isActive: Bool) {
+    func setEditNavigation(isActive: Bool) {
         self.route = isActive ? .edit(.init(item: self.item)) : nil
     }
 
@@ -71,11 +71,11 @@ public class ItemRowViewModel: Hashable, Identifiable, ObservableObject {
         }
     }
 
-    public func cancelButtonTapped() {
+    func cancelButtonTapped() {
         self.route = nil
     }
 
-    public func duplicateButtonTapped() {
+    func duplicateButtonTapped() {
         self.route = .duplicate(.init(item: self.item.duplicate()))
     }
 
@@ -88,23 +88,23 @@ public class ItemRowViewModel: Hashable, Identifiable, ObservableObject {
 
 extension Item {
 
-    public func duplicate() -> Self {
+    func duplicate() -> Self {
         .init(name: self.name, color: self.color, status: self.status)
     }
 
 }
 
-public struct ItemRowView: View {
+struct ItemRowView: View {
 
     @ObservedObject var viewModel: ItemRowViewModel
 
-    public init(
+    init(
         viewModel: ItemRowViewModel
     ) {
         self.viewModel = viewModel
     }
 
-    public var body: some View {
+    var body: some View {
         NavigationLink(
             unwrap: self.$viewModel.route,
             case: /ItemRowViewModel.Route.edit,

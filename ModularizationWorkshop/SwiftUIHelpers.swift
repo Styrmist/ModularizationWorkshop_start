@@ -3,7 +3,7 @@ import SwiftUI
 
 extension Binding {
 
-    public init?(unwrap binding: Binding<Value?>) {
+    init?(unwrap binding: Binding<Value?>) {
 
         guard let wrappedValue = binding.wrappedValue else { return nil }
 
@@ -14,7 +14,7 @@ extension Binding {
 
     }
 
-    public func isPresent<Wrapped>() -> Binding<Bool> where Value == Wrapped? {
+    func isPresent<Wrapped>() -> Binding<Bool> where Value == Wrapped? {
         .init(
             get: { self.wrappedValue != nil },
             set: { isPresented in
@@ -26,7 +26,7 @@ extension Binding {
         )
     }
   
-    public func isPresent<Enum, Case>(_ casePath: CasePath<Enum, Case>) -> Binding<Bool> where Value == Enum? {
+    func isPresent<Enum, Case>(_ casePath: CasePath<Enum, Case>) -> Binding<Bool> where Value == Enum? {
         Binding<Bool>(
             get: {
                 if let wrappedValue = self.wrappedValue, casePath.extract(from: wrappedValue) != nil {
@@ -43,7 +43,7 @@ extension Binding {
         )
     }
   
-    public func `case`<Enum, Case>(_ casePath: CasePath<Enum, Case>) -> Binding<Case?> where Value == Enum? {
+    func `case`<Enum, Case>(_ casePath: CasePath<Enum, Case>) -> Binding<Case?> where Value == Enum? {
         Binding<Case?>(
             get: {
                 guard let wrappedValue = self.wrappedValue,
@@ -61,7 +61,7 @@ extension Binding {
         )
     }
 
-    public func didSet(_ callback: @escaping (Value) -> Void) -> Self {
+    func didSet(_ callback: @escaping (Value) -> Void) -> Self {
         .init(
             get: { self.wrappedValue },
             set: {
@@ -73,7 +73,7 @@ extension Binding {
 }
 
 extension View {
-    public func alert<A: View, M: View, T>(
+    func alert<A: View, M: View, T>(
         title: (T) -> Text,
         presenting data: Binding<T?>,
         @ViewBuilder actions: @escaping (T) -> A,
@@ -88,7 +88,7 @@ extension View {
         )
     }
 
-    public func alert<A: View, M: View, Enum, Case>(
+    func alert<A: View, M: View, Enum, Case>(
         title: (Case) -> Text,
         unwrap data: Binding<Enum?>,
         case casePath: CasePath<Enum, Case>,
@@ -103,7 +103,7 @@ extension View {
         )
     }
 
-    public func confirmationDialog<A: View, M: View, T>(
+    func confirmationDialog<A: View, M: View, T>(
         title: (T) -> Text,
         titleVisibility: Visibility = .automatic,
         presenting data: Binding<T?>,
@@ -120,7 +120,7 @@ extension View {
         )
     }
 
-    public func confirmationDialog<A: View, M: View, Enum, Case>(
+    func confirmationDialog<A: View, M: View, Enum, Case>(
         title: (Case) -> Text,
         unwrap data: Binding<Enum?>,
         case casePath: CasePath<Enum, Case>,
@@ -135,7 +135,7 @@ extension View {
         )
     }
 
-    public func sheet<Value, Content>(
+    func sheet<Value, Content>(
         unwrap optionalValue: Binding<Value?>,
         @ViewBuilder content: @escaping (Binding<Value>) -> Content
     ) -> some View where Value: Identifiable, Content: View {
@@ -148,7 +148,7 @@ extension View {
         }
     }
 
-    public func sheet<Enum, Case, Content>(
+    func sheet<Enum, Case, Content>(
         unwrap optionalValue: Binding<Enum?>,
         case casePath: CasePath<Enum, Case>,
         @ViewBuilder content: @escaping (Binding<Case>) -> Content
@@ -156,7 +156,7 @@ extension View {
         self.sheet(unwrap: optionalValue.case(casePath), content: content)
     }
 
-    public func popover<Value, Content>(
+    func popover<Value, Content>(
         unwrap optionalValue: Binding<Value?>,
         @ViewBuilder content: @escaping (Binding<Value>) -> Content
     ) -> some View where Value: Identifiable, Content: View {
@@ -169,7 +169,7 @@ extension View {
         }
     }
 
-    public func popover<Enum, Case, Content>(
+    func popover<Enum, Case, Content>(
         unwrap optionalValue: Binding<Enum?>,
         case casePath: CasePath<Enum, Case>,
         @ViewBuilder content: @escaping (Binding<Case>) -> Content
@@ -179,7 +179,7 @@ extension View {
 }
 
 extension NavigationLink {
-    public init<Value, WrappedDestination>(
+    init<Value, WrappedDestination>(
         unwrap optionalValue: Binding<Value?>,
         onNavigate: @escaping (Bool) -> Void,
         @ViewBuilder destination: @escaping (Binding<Value>) -> WrappedDestination,
@@ -198,7 +198,7 @@ extension NavigationLink {
         )
     }
 
-    public init<Enum, Case, WrappedDestination>(
+    init<Enum, Case, WrappedDestination>(
         unwrap optionalValue: Binding<Enum?>,
         case casePath: CasePath<Enum, Case>,
         onNavigate: @escaping (Bool) -> Void,
@@ -216,12 +216,12 @@ extension NavigationLink {
     }
 }
 
-public struct IfCaseLet<Enum, Case, Content>: View where Content: View {
+struct IfCaseLet<Enum, Case, Content>: View where Content: View {
     let binding: Binding<Enum>
     let casePath: CasePath<Enum, Case>
     let content: (Binding<Case>) -> Content
 
-    public init(
+    init(
         _ binding: Binding<Enum>,
         pattern casePath: CasePath<Enum, Case>,
         @ViewBuilder content: @escaping (Binding<Case>) -> Content
@@ -231,7 +231,7 @@ public struct IfCaseLet<Enum, Case, Content>: View where Content: View {
         self.content = content
     }
 
-    public var body: some View {
+    var body: some View {
         if let `case` = self.casePath.extract(from: self.binding.wrappedValue) {
             self.content(
                 Binding(
@@ -243,19 +243,19 @@ public struct IfCaseLet<Enum, Case, Content>: View where Content: View {
     }
 }
 
-public struct ToSwiftUI: UIViewControllerRepresentable {
+struct ToSwiftUI: UIViewControllerRepresentable {
     let viewController: () -> UIViewController
 
-    public init(
+    init(
         viewController: @escaping () -> UIViewController
     ) {
         self.viewController = viewController
     }
 
-    public func makeUIViewController(context: Context) -> UIViewController {
+    func makeUIViewController(context: Context) -> UIViewController {
         self.viewController()
     }
 
-    public func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
     }
 }

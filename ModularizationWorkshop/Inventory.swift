@@ -2,15 +2,15 @@ import CasePaths
 import IdentifiedCollections
 import SwiftUI
 
-public class InventoryViewModel: ObservableObject {
-  @Published public var inventory: IdentifiedArrayOf<ItemRowViewModel>
-  @Published public var route: Route?
+class InventoryViewModel: ObservableObject {
+  @Published var inventory: IdentifiedArrayOf<ItemRowViewModel>
+  @Published var route: Route?
   
-  public enum Route: Equatable {
+  enum Route: Equatable {
     case add(ItemViewModel)
     case row(id: ItemRowViewModel.ID, route: ItemRowViewModel.Route)
 
-    public static func == (lhs: Self, rhs: Self) -> Bool {
+    static func == (lhs: Self, rhs: Self) -> Bool {
       switch (lhs, rhs) {
       case let (.add(lhs), .add(rhs)):
         return lhs === rhs
@@ -22,7 +22,7 @@ public class InventoryViewModel: ObservableObject {
     }
   }
 
-  public init(
+  init(
     inventory: IdentifiedArrayOf<ItemRowViewModel> = [],
     route: Route? = nil
   ) {
@@ -100,14 +100,14 @@ public class InventoryViewModel: ObservableObject {
   }
 }
 
-public struct InventoryView: View {
+struct InventoryView: View {
   @ObservedObject var viewModel: InventoryViewModel
   
-  public init(viewModel: InventoryViewModel) {
+  init(viewModel: InventoryViewModel) {
     self.viewModel = viewModel
   }
   
-  public var body: some View {
+  var body: some View {
     List {
       ForEach(
         self.viewModel.inventory,

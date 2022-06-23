@@ -1,17 +1,17 @@
 import Combine
 import UIKit
 
-public class ItemRowCellView: UICollectionViewListCell {
+class ItemRowCellView: UICollectionViewListCell {
 
     var cancellables: Set<AnyCancellable> = []
 
-    override public func prepareForReuse() {
+    override func prepareForReuse() {
         super.prepareForReuse()
 
         self.cancellables = []
     }
 
-    public func bind(viewModel: ItemRowViewModel, context: UIViewController) {
+    func bind(viewModel: ItemRowViewModel, context: UIViewController) {
 
         viewModel.$item
             .map(\.name)

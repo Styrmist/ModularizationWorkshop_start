@@ -3,11 +3,11 @@ import Combine
 import SwiftUI
 import UIKit
 
-public class ItemViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+class ItemViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
   let viewModel: ItemViewModel
   private var cancellables: Set<AnyCancellable> = []
   
-  public init(viewModel: ItemViewModel) {
+  init(viewModel: ItemViewModel) {
     self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
   }
@@ -16,7 +16,7 @@ public class ItemViewController: UIViewController, UIPickerViewDelegate, UIPicke
     fatalError("init(coder:) has not been implemented")
   }
   
-  override public func viewDidLoad() {
+  override func viewDidLoad() {
     super.viewDidLoad()
     
     // MARK: View creation
@@ -174,19 +174,19 @@ public class ItemViewController: UIViewController, UIPickerViewDelegate, UIPicke
     )
   }
   
-  public func numberOfComponents(in pickerView: UIPickerView) -> Int {
+  func numberOfComponents(in pickerView: UIPickerView) -> Int {
     1
   }
   
-  public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+  func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
     Item.Color.all.count
   }
   
-  public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+  func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
     Item.Color.all[row]?.name ?? "None"
   }
 
-  public func pickerView(
+  func pickerView(
     _ pickerView: UIPickerView,
     didSelectRow row: Int,
     inComponent component: Int
